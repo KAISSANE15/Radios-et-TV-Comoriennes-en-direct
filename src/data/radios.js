@@ -201,7 +201,7 @@ export const radios = [
     location: "Cotonou",
     category: "Musique",
     description: "Radio de la musique comorienne dépuis le Bénin",
-    streamUrl: "http://localhost:8000/stream",
+    streamUrl: "https://13a2af434dbc.ngrok-free.app/stream",
     website: "http://localhost:5173/",
     logo: "/api/placeholder/80/80",
     isOnline: true,
