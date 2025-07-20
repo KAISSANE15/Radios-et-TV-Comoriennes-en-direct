@@ -8,7 +8,7 @@ export const radios = [
     description: "Radio officielle des Comores",
     streamUrl: "https://stream.vestaradio.com/RadioMRV", // Found on fmstream.org (MRV Radio Océan Indien, but ORTC is also listed there)
     website: "https://ortc.km",
-    logo: "./src/assets/images/ortc.jpeg",
+    logo: "https://th.bing.com/th/id/R.70f492d1b353c5ffc57d852a52ea70a8?rik=7uDi%2f5nBg2pfmg&riu=http%3a%2f%2fwww.radio-comores.com%2fimg%2fOrtc.jpg&ehk=CiQjfDJ9OEP3KDxxQ96CbfrirDlpGYGjmkhjLY1HZX4%3d&risl=&pid=ImgRaw&r=0",
     isOnline: true,
     listeners: 1250
   },
@@ -21,7 +21,7 @@ export const radios = [
     description: "L\"information en continu",
     streamUrl: "https://stream.kwezi.com/live", // Placeholder, needs verification
     website: "https://infokwezi.com",
-    logo: "./src/assets/images/kwezi.jpeg",
+    logo: "https://khwezi.org.za/wp-content/uploads/2020/05/Radio-Khwezi-sml.jpg",
     isOnline: true,
     listeners: 890
   },
@@ -34,7 +34,7 @@ export const radios = [
     description: "La radio de la musique comorienne",
     streamUrl: "https://radio2.pro-fhi.net:19015/stream", // Found on fmstream.org
     website: "https://mparano.com",
-    logo: "./src/assets/images/comores.png",
+    logo: "https://tse1.mm.bing.net/th/id/OIP.5L4FE2ehlQaXXIrvwhmhQAAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
     isOnline: true,
     listeners: 675
   },
@@ -47,7 +47,7 @@ export const radios = [
     description: "Toute l\"actualité des Comores",
     streamUrl: "https://radio.comoresinfos.com/stream",
     website: "https://comoresinfos.com",
-    logo: "./src/assets/images/comores.png",
+    logo: "https://play-lh.googleusercontent.com/pOZ6H6v_HbaFlhr5wPUo4kGODOV5aGqH2-ADjNPSIKIl4TJTBuHkLukcQPdJna8wsQ",
     isOnline: false,
     listeners: 0
   },
@@ -60,7 +60,7 @@ export const radios = [
     description: "Radio Comores Marseille",
     streamUrl: "https://stream.vestaradio.com/RCM13", // Found on fmstream.org
     website: "https://rcm13.fr",
-    logo: "./src/assets/images/rcm.png",
+    logo: "https://th.bing.com/th/id/R.77c02fc1b2b44cc1186cdb889b4f24b1?rik=uwwM9QlSlJNgrw&riu=http%3a%2f%2fwww.radio-comores.com%2fimg%2fradio-mparano.jpg&ehk=eWGGNxGersKOAxF%2bgdCx2JYMzk968YQCDSto4wQb6v0%3d&risl=&pid=ImgRaw&r=0",
     isOnline: true,
     listeners: 1450
   },
@@ -73,7 +73,7 @@ export const radios = [
     description: "Radio locale de Domoni",
     streamUrl: "http://domoni-inter.org:8000/live",
     website: "http://domoni-inter.org:8000/live",
-    logo: "./src/assets/images/Domoni.jpeg",
+    logo: "https://tse1.mm.bing.net/th/id/OIP._rZC0m7anJK40pTeUPVFcAHaFO?r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
     isOnline: true,
     listeners: 320
   },
