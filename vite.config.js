@@ -17,7 +17,7 @@ export default defineConfig({
       clientPort: 443,
     },
     allowedHosts: [
-      '8ce7b66113b7.ngrok-free.app'
+      '13a2af434dbc.ngrok-free.app'
     ]
   }
 })
