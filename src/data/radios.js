@@ -196,13 +196,13 @@ export const radios = [
   },
   {
     id: 16,
-    name: "LADATOU BÉNIN TV",
+    name: "LADATOU BÉNIN FM",
     frequency: "Web",
     location: "Cotonou",
     category: "Musique",
-    description: "Radio de la musique comorienne dépuis le Bénin",
-    streamUrl: "http://s43.myradiostream.com:23858/",
-    website: "http://localhost:5173/",
+    description: "Radio de la musique comorienne depuis le Bénin",
+    streamUrl: "http://s43.myradiostream.com:23858/;stream/1",
+    website: "https://ladatou-benin-fm.com",
     logo: "/api/placeholder/80/80",
     isOnline: true,
     listeners: 629
