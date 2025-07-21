@@ -12,13 +12,10 @@ export default defineConfig({
     },
   },
   server: {
-    host: true,
-    hmr: {
-      clientPort: 443,
-    },
-    allowedHosts: [
-      '13a2af434dbc.ngrok-free.app'
-    ]
+    host: true,             // écoute sur toutes les interfaces (utile pour accès depuis autre PC/mobile)
+    port: 5173,             // tu peux choisir un autre port si nécessaire
+    strictPort: true,       // ne change pas de port automatiquement
+    cors: true,  
   }
 })
 
