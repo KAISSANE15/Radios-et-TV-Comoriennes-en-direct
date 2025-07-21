@@ -201,7 +201,7 @@ export const radios = [
     location: "Cotonou",
     category: "Musique",
     description: "Radio de la musique comorienne dépuis le Bénin",
-    streamUrl: "https://13a2af434dbc.ngrok-free.app/stream",
+    streamUrl: "http://sapircast.caster.fm:10771/rAdQu",
     website: "http://localhost:5173/",
     logo: "/api/placeholder/80/80",
     isOnline: true,
