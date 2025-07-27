@@ -1,13 +1,22 @@
 import { useState, useRef, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX, X, ExternalLink } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, X, ExternalLink, RotateCw } from 'lucide-react';
 import { Button } from './ui/button';
 import { Slider } from './ui/slider';
 import { Badge } from './ui/badge';
+import MyRadioStreamPlayer from './MyRadioStreamPlayer';
+
+// Fonction utilitaire pour ajouter des paramètres à une URL
+const addUrlParams = (url, params) => {
+  if (!url) return url;
+  const separator = url.includes('?') ? '&' : '?';
+  return `${url}${separator}${new URLSearchParams(params).toString()}`;
+};
 
 export default function AudioPlayer({ currentRadio, isPlaying, onPlay, onPause, onClose }) {
   const [volume, setVolume] = useState([0.7]);
   const [isMuted, setIsMuted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const audioRef = useRef(null);
 
   useEffect(() => {
@@ -17,30 +26,97 @@ export default function AudioPlayer({ currentRadio, isPlaying, onPlay, onPause, 
   }, [volume, isMuted]);
 
   useEffect(() => {
-    if (currentRadio) {
-      if (isPlaying) {
-        setIsLoading(true);
-        audioRef.current.src = currentRadio.streamUrl;
-        audioRef.current.load();
-        audioRef.current.play().then(() => {
-          setIsLoading(false);
-        }).catch(error => {
-          console.error("Error playing audio:", error);
-          setIsLoading(false);
-          onPause(); // Pause if playback fails
+    if (!currentRadio) return;
+
+    const audio = audioRef.current;
+    
+    const handleError = (error) => {
+      console.error("Erreur de lecture audio:", error);
+      setIsLoading(false);
+      onPause();
+      setError("Impossible de lire cette station radio. Veuillez réessayer ou sélectionner une autre station.");
+      
+      // Réinitialiser l'erreur après 5 secondes
+      setTimeout(() => {
+        setError(null);
+      }, 5000);
+    };
+
+    const handleCanPlay = () => {
+      console.log("Le flux audio est prêt à être lu");
+      setIsLoading(false);
+      setError(null);
+    };
+
+    const handleLoadStart = () => {
+      console.log("Chargement du flux audio...");
+      setIsLoading(true);
+    };
+
+    const handleStalled = () => {
+      console.log("Flux audio en attente...");
+      setIsLoading(true);
+    };
+
+    // Ajout des écouteurs d'événements
+    audio.addEventListener('error', handleError);
+    audio.addEventListener('canplay', handleCanPlay);
+    audio.addEventListener('loadstart', handleLoadStart);
+    audio.addEventListener('stalled', handleStalled);
+
+    if (isPlaying) {
+      console.log("Tentative de lecture de:", currentRadio.streamUrl);
+      
+      // Ajout d'un timestamp pour éviter le cache
+      const timestamp = new Date().getTime();
+      const streamUrl = addUrlParams(currentRadio.streamUrl, { _: timestamp });
+      
+      // Configuration pour les flux Shoutcast/Icecast
+      audio.crossOrigin = 'anonymous';
+      audio.preload = 'auto';
+      
+      // Forcer un nouveau chargement de la source audio
+      audio.pause();
+      audio.src = streamUrl;
+      
+      // Essayer de lire le flux
+      const playPromise = audio.play();
+      
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.error("Erreur lors de la lecture:", error);
+          // Essayer avec une approche différente pour les navigateurs stricts
+          audio.muted = true;
+          audio.play().then(() => {
+            audio.muted = false;
+          }).catch(handleError);
         });
-      } else {
-        audioRef.current.pause();
       }
+    } else {
+      audio.pause();
     }
-  }, [currentRadio, isPlaying]);
+
+    // Nettoyage des écouteurs d'événements
+    return () => {
+      audio.removeEventListener('error', handleError);
+      audio.removeEventListener('canplay', handleCanPlay);
+      audio.removeEventListener('loadstart', handleLoadStart);
+      audio.removeEventListener('stalled', handleStalled);
+    };
+  }, [currentRadio, isPlaying, onPause]);
 
   const handlePlayPause = () => {
     if (isPlaying) {
       onPause();
     } else {
+      setError(null);
       onPlay();
     }
+  };
+  
+  const handleRetry = () => {
+    setError(null);
+    onPlay();
   };
 
   const handleVolumeToggle = () => {
@@ -54,9 +130,13 @@ export default function AudioPlayer({ currentRadio, isPlaying, onPlay, onPause, 
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Radio Info */}
-          <div className="flex items-center space-x-3 flex-1 min-w-0">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center text-white font-bold flex-shrink-0">
-              {currentRadio.name.charAt(0)}
+          <div className="flex items-center space-x-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center text-white font-bold flex-shrink-0 overflow-hidden">
+              {currentRadio.logo ? (
+                <img src={currentRadio.logo} alt={currentRadio.name} className="w-full h-full object-cover" />
+              ) : (
+                currentRadio.name.charAt(0)
+              )}
             </div>
             <div className="min-w-0 flex-1">
               <h4 className="font-semibold text-sm truncate">{currentRadio.name}</h4>
@@ -75,6 +155,20 @@ export default function AudioPlayer({ currentRadio, isPlaying, onPlay, onPause, 
               </div>
             </div>
           </div>
+          
+          {error && (
+            <div className="ml-4 px-3 py-1 bg-red-100 text-red-700 rounded-md text-sm flex items-center">
+              <span>{error}</span>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={handleRetry}
+                className="ml-2 h-6 px-2 text-red-700 hover:bg-red-200"
+              >
+                <RotateCw className="w-3 h-3 mr-1" /> Réessayer
+              </Button>
+            </div>
+          )}
 
           {/* Controls */}
           <div className="flex items-center space-x-4">
@@ -146,13 +240,34 @@ export default function AudioPlayer({ currentRadio, isPlaying, onPlay, onPause, 
         </div>
       </div>
 
-      {/* Hidden audio element for demo */}
-      <audio
-        ref={audioRef}
-        autoPlay={false} // Managed by useEffect
-        loop
-        className="hidden"
-      />
+      {/* Hidden audio element for standard streams */}
+      {!isMyRadioStream && (
+        <audio
+          ref={audioRef}
+          autoPlay={false}
+          loop={false}
+          crossOrigin="anonymous"
+          preload="auto"
+          className="hidden"
+          playsInline
+          webkit-playsinline="true"
+        />
+      )}
+      
+      {/* MyRadioStream Player */}
+      {isMyRadioStream && (
+        <div className="hidden">
+          <MyRadioStreamPlayer 
+            streamId={currentRadio.streamId || 'KAISSANE01'}
+            isPlaying={isPlaying}
+            onError={(error) => {
+              console.error('Erreur du lecteur MyRadioStream:', error);
+              setError(error);
+              onPause();
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }
